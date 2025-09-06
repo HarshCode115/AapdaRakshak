@@ -1,0 +1,19 @@
+.showalert{
+    // border:1px solid red;    
+    margin:30px;
+}
+.showalert >div{
+    border: 1px solid black;
+    margin:10px;
+    // width: fit-content;
+    // border-right-style: ;
+}
+
+.showalert1:hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .showalert1:hidden {
+    transform: scaleX(2) scaleY(1.5);
+  }

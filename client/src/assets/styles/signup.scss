@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+.signup-container{
+  width: 100%;
+  height: 100vh;
+  // border: 1px solid black;
+  display: flex;
+  // flex-wrap: wrap;
+  text-align: center;
+}
+.signup-left{
+  flex:1;
+  height:100vh;
+}
+.signup-right{
+  flex:1;
+  position: relative;
+  height: 100vh;
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--col1);
+}
+
+.signup-right img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.signup{
+  // padding:15% 20%;
+  margin:15% 20%;
+  background-color:white;
+}
+
+
+.signup #googlebtn{
+  color:black;
+  border-radius: 4px;
+  border: 1px solid #969696;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.signup #googleIcon{
+  height: 30px;
+}
+
+
+  .signup input {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 14px 12px;
+    font-size: 16px;
+    border-radius: 2px; 
+    font-family: Raleway, sans-serif;
+  }
+
+.signup input[type=text],
+.signup input[type=password] {
+  border: 1px solid #969696;
+  transition: .2s;
+}
+
+.signup input[type=submit] {
+  border: none;
+  background:var(--col1);
+  color: white;
+  font-weight: bold;  
+  transition: 0.2s;
+  margin: 20px 0px;
+  border-radius: 4px;
+}
+
+  .signup h2 {
+    margin: 20px 0 0; 
+    color:black;
+    font-size: 36px;
+  }
+
+.signup p {
+  margin-bottom: 20px;
+}
+
+.links {
+  display: table;
+  width: 100%;  
+  box-sizing: border-box;
+  border-top: 1px solid #969696;
+  margin-bottom: 10px;
+}
+
+.links a {
+  display: table-cell;
+  padding-top: 10px;
+  padding-right: 8px;
+}
+
+.links a:first-child {
+  text-align: left;
+}
+
+.links a:last-child {
+  text-align: right;
+}
+
+  .login h2,
+  .login p,
+  .login a {
+    text-align: center;    
+  }
+
+.signup a {
+  text-decoration: none;  
+  font-size: .8em;
+}
+
+.signup a:visited {
+  color: inherit;
+}
+
+.signup a:hover {
+  text-decoration: underline;
+}
+.signup span input{
+  margin-left: 0px;
+  padding-left: 0px;
+  width: 20px;
+}
+
+.google{
+    padding-left:20px;
+}
+
+@media screen and (max-width: 821px){
+
+  .signup-right{
+    display: none;
+  }
+
+}

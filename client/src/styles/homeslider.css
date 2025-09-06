@@ -1,0 +1,45 @@
+.slider-container{
+    height: 75vh;
+    width: 90vw;
+    margin: 0px auto;
+}
+
+.slider-container #each-slider{
+    height: 100%;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+   
+}
+
+.slider-container button{
+    background: #969696;
+    border-radius: 50%;
+}
+.slider-container button:hover{
+    background: #e3e3e3;
+    border-radius: 50%;
+}
+
+.slider-container #each-slider img{
+   height: 65vh;
+   max-width: 100%;
+   margin: 0px auto;
+}
+
+@media screen and (max-width: 821px) {
+    .slider-container{
+        height: 60vh;
+        width: 90vw;
+        padding: 20px;
+        margin: 0px auto;
+        
+    }
+    
+    .slider-container #each-slider img{
+       height: auto;
+       max-height: 50vh;
+       width: 100%
+    }
+    
+}

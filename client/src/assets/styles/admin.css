@@ -1,0 +1,88 @@
+.admin-container{
+    width: 100%;
+    height: 92vh;
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-left{
+    height: 100%;
+    flex: 2;
+    min-width: fit-content;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    padding: 4vh 0.5rem;
+    box-shadow: var(--bs1);
+}
+
+.admin-left li
+{
+    /* border: 1px solid blue; */
+    border-radius: 25px;
+    padding: 0.5rem 0.8rem;
+    list-style: none;   
+    font-size: 1.4rem; 
+    transition: all 0.3 linear;
+    cursor: pointer;
+}
+
+.admin-left li:hover
+{
+    background: #e0e0e0;
+}
+
+.admin-right{
+  
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.admin-top{
+    flex: 2;
+ 
+    height: 100vh;
+    width: auto;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 2rem;
+    padding-left: 2rem;
+}
+
+.admin-box{
+    flex: 5;
+    overflow-y: hidden;
+}
+
+.top-bar{
+    height: 3rem;
+    box-shadow: var(--bs1);
+    position: sticky;
+    border: 1px solid #cdcdcd;
+}
+
+.main-box{
+    overflow-y: auto;
+    
+    height:100%;
+    padding-bottom: 6vh;
+}
+
+.admin-box .main-box::-webkit-scrollbar{
+    display: none;
+}
+
+.admin-box .main-box .box-child{
+    display: flex;
+    justify-content: space-between;
+    margin: 1vh 0.5rem;
+    padding: 1vh 1rem;
+    border: 1px solid #cdcdcd;
+    box-shadow: var(--bs1);
+}
+
+

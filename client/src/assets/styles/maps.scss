@@ -1,0 +1,39 @@
+.maps{
+  // background-color:blue;
+    width:100%;
+    height:100vh;
+    display: flex;
+} 
+
+.first-div{
+  padding: 80px;
+  height: 250px;
+  width: 250px;
+  
+}
+.first-div h1{
+  font-size: 35px;
+  color: black;
+}
+.second-div{
+ flex: 1;
+//  border: 1px solid red;
+ padding: 1vh;
+}
+
+.second-div img{
+  
+  // width: 100%;
+  height: 98vh;
+  width: 100%;
+  padding-left: 60px;
+}
+
+.list{
+  list-style-type: circle;
+  color: black;
+}
+.list li{
+  font-size: 25px;
+  
+}

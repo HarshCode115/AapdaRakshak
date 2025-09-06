@@ -1,0 +1,89 @@
+@import "colors";
+#menu{
+    width: 100%;
+    min-height: 100vh;
+    background-color: white;
+    padding:4rem;
+
+    position: relative;
+    >h1{
+        font-size: 2rem;
+        text-align: center;
+        padding:2rem;
+        color: black;
+    }
+    >div{
+        display: flex;
+        justify-content: space-evenly;
+    }
+}
+.menuCard{
+    background-color: white;
+    width:30%;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.495);
+    >div{
+        border-radius: 20px 20px 0 0;
+        // background-color: blue;
+        display: flex;
+        align-items: center;
+        // padding:2rem;
+        color: white;
+        // height: 4rem;
+    }
+    >main{
+        padding:2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        >img{
+            height: 15rem;
+            width: 100%;
+            object-fit: contain;
+        }
+        >h5{
+            font-size: 1.8rem;
+        }
+        >p{
+            // text-transform:uppercase;    
+            font-family: serif;
+            font-size: 20px;
+            padding:1rem 0;
+            color: black;
+        }
+        >button{
+            background-color: rgb(14, 14, 203);
+            color:white;
+            font-size: 15px;
+            border:none;
+            padding:1rem 2rem;
+            width:100%;
+            border-radius: 10px;
+            cursor: pointer;
+            &:hover{
+                background-color: rgb(2, 2, 105);
+
+            }
+        }
+    }
+
+}
+
+
+.raise{
+    position:absolute;
+    right: 1vw;
+    top: 1vh;
+    z-index: 0;
+
+}
+
+@media screen and (max-width: 821px) {
+#menu >div{
+    flex-direction: column;
+}
+.menuCard{
+    width: 100%;
+    margin:1rem 0;
+}
+  }

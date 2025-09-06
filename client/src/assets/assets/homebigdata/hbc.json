@@ -1,0 +1,25 @@
+[
+    
+    {
+        "key":0,
+        "head": "Medical Support",
+        "data": "Medical Support provide essential services such as first aid, treatment of injuries, disease prevention, and mental health support. They also play a key role in assessing and responding to the medical needs of affected populations. Without medical support, disaster relief efforts would be incomplete, as the health and well-being of survivors is essential to long-term recovery.",
+        "button":"none",
+        "row":"row"
+        
+    },
+    {
+        "key":1,
+        "head": "Be a Volunteer",
+        "data": "Volunteering in disaster relief efforts can be one of the most rewarding experiences you can have. Not only are you helping others in need, but you are also making a positive impact on your community. By volunteering, you can gain valuable skills, make new connections, and build a sense of personal fulfillment. Whether it's distributing supplies, providing emotional support, or rebuilding homes, your efforts can make a significant difference in the lives of those affected by disasters.",
+        "button":"Be a Volunteer",
+        "row":"row-reverse"
+    },
+    {
+        "key":2,
+        "head": "Donate to Victims",
+        "data": "Your contribution, no matter how small, can make a huge difference in the lives of those affected. By donating, you can help provide shelter, food, medicine, and other essential supplies to those who need it the most.It is crucial for everyone to come together and help those affected by these calamities by donating to disaster relief organizations.",
+        "button":"Donate",
+        "row":"row"
+    }
+]

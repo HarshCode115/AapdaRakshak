@@ -1,0 +1,26 @@
+[
+    {
+        "Name":"Satyam",
+        "Contact":"1234567890",
+        "Type":"chological help",
+        "Location":"Mumbai",
+        "Description":" Many organizations, especially at the time of accidents, disasters, and critical conditions, cannot provide their services without the presence of volunteers. When accidents and disasters occur, the rst persons who normally appear at the scene are citizens.",
+        "Image":""
+    },
+    {
+        "Name":"Piyush",
+        "Contact":"0987654321",
+        "Type":"construction",
+        "Location":"Delhi",
+        "Description":"The current study examined the published articles from 2000 to 2016 based on the following keywords: informal volunteers in the disasters, challenges facing volunteer citizens in accidents and disasters, informal volunteers and disasters in local and foreign electronic databases including SID, Magiran, Iran Medex, ISC, Google Scholar, PubMed, ISI, and Scopus.",
+        "Image":""
+    },
+    {
+        "Name":"Anjali",
+        "Contact":"2345435325",
+        "Type":"search and relief and rescue",
+        "Location":"Kolkata",
+        "Description":" Based on the search strategy, 50 articles were examined and the keywords, denitions, volunteer roles, role of volunteers in accidents and disasters, various types of informal voluntary activities, and volunteer citizens’ participation were examined.",
+        "Image":""
+    }
+]
