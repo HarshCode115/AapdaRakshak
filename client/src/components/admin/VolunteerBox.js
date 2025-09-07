@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Popup from './PopupNew';
-function VolunteerBox() {
+function VolunteerBox({ isUserView = false }) {
   const [show,setShow] = useState(true);
   const [data,setData] = useState([
     {
@@ -45,7 +45,9 @@ function VolunteerBox() {
   return (
     <div className='admin-box'>
     <div className='top-bar'>
-    <h5 style={{fontSize:'1.2rem',padding:'0.6rem 0 0 1rem',fontWeight:'400'}}>Review Volunteer Application</h5>
+    <h5 style={{fontSize:'1.2rem',padding:'0.6rem 0 0 1rem',fontWeight:'400'}}>
+      {isUserView ? 'View Volunteer Applications' : 'Review Volunteer Application'}
+    </h5>
   </div>
 
   <div className='main-box'>

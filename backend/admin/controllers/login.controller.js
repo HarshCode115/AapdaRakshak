@@ -2,7 +2,7 @@ const express=require('express');
 const {adminmodel}=require('../../models/admin.model');
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcryptjs');
-require('dotenv').config('../../')
+require('dotenv').config()
 const {validate_schema}=require('../helper/validate.schema')
 async function loginadmin(req,res){
     try {

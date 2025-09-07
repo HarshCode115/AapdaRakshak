@@ -30,7 +30,7 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 
-export default function Popup({heading,data,att}) {
+export default function Popup({heading,data,att,isUserView = false}) {
   const [open, setOpen] = useState(false);
   const cookie=new Cookies()
   let dataArr = Object.values(data);

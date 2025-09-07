@@ -1,16 +1,46 @@
-const mongoose =require('mongoose');
-require('dotenv').config('../')
-// const pool=mongoose.connect("mongodb://localhost:27017/aptguard",{
-const pool=mongoose.connect("mongodb+srv://1234:1234@cluster0.0ilq2hx.mongodb.net/",{
-    connectTimeoutMS: 10000,
-    useNewUrlParser: true 
-})
-.then(function(db){
-  console.log("db is connected 🎉🎉🎉");
-})
-.catch(function(err){
-  console.log('error at mongo connection',err.message);
-})
+const mongoose = require('mongoose');
+require('dotenv').config()
+
+let isConnected = false;
+
+// MongoDB connection with fallback
+const connectDB = async () => {
+  try {
+    // Try cloud MongoDB first
+    await mongoose.connect("mongodb+srv://harshsrivastava123hs_db_user:Prankursrivastava1@aapdarakshak.hptxcb8.mongodb.net/aapdarakshak", {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
+      bufferCommands: false,
+      maxPoolSize: 10,
+    });
+    isConnected = true;
+    console.log("✅ Connected to MongoDB Atlas");
+  } catch (error) {
+    console.log("❌ MongoDB Atlas connection failed:", error.message);
+    console.log("🔄 Trying local MongoDB...");
+    
+    try {
+      // Fallback to local MongoDB
+      await mongoose.connect("mongodb://localhost:27017/aapdarakshak", {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        bufferCommands: false,
+        maxPoolSize: 10,
+      });
+      isConnected = true;
+      console.log("✅ Connected to local MongoDB");
+    } catch (localError) {
+      console.log("❌ Local MongoDB connection failed:", localError.message);
+      console.log("⚠️  Running without database connection");
+      isConnected = false;
+    }
+  }
+};
+
+// Disable buffering to prevent timeout errors when not connected
+mongoose.set('bufferCommands', false);
+
+connectDB();
 
 mongoose.connection.on('connected',()=>{
   console.log('connectes to data base')
@@ -26,5 +56,11 @@ process.on('SIGINT',async ()=>{
   await mongoose.connection.close();
   process.exit(0);
 })
-module.exports=pool;
+// Export connection status checker and mongoose
+const getConnectionStatus = () => isConnected;
+
+module.exports = { 
+  mongoose, 
+  isConnected: getConnectionStatus 
+};
 

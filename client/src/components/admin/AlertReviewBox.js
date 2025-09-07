@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PopupNew from './PopupNew';
-function AlertReviewBox() {
+function AlertReviewBox({ isUserView = false }) {
 
   const [show,setShow] = useState(true);
   const [data,setData] = useState([
@@ -34,7 +34,9 @@ function AlertReviewBox() {
   return (
     <div className='admin-box'>
     <div className='top-bar'>
-    <h5 style={{fontSize:'1.2rem',padding:'0.6rem 0 0 1rem',fontWeight:'400'}}>Review Alert Requests</h5>
+    <h5 style={{fontSize:'1.2rem',padding:'0.6rem 0 0 1rem',fontWeight:'400'}}>
+      {isUserView ? 'View Alert Requests' : 'Review Alert Requests'}
+    </h5>
   </div>
 
   <div className='main-box'>

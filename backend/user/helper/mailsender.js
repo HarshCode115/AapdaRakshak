@@ -1,5 +1,5 @@
 const nodemailer=require('nodemailer');
-require('dotenv').config('../../');
+require('dotenv').config();
 var transport=nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,

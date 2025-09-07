@@ -171,15 +171,26 @@ async function deletealert(req,res){
     }
 }
 async function printing(){
-    const result=await adminalertmodel.find();
-    for(let i=0;i<result.length;i++){
-        let data=result[i]
-        let currval=Math.floor(Date.now()/(1000*60))
-        if(data.expiresby!=-1&&currval-data.createdby==data.expiresby){
-            await adminalertmodel.findByIdAndDelete({_id:data._id})
+    try {
+        // Check if database is connected before running operations
+        const { isConnected } = require('../../db/db');
+        if (!isConnected()) {
+            console.log('⚠️  Skipping alert cleanup - database not connected');
+            return;
         }
+        
+        const result=await adminalertmodel.find();
+        for(let i=0;i<result.length;i++){
+            let data=result[i]
+            let currval=Math.floor(Date.now()/(1000*60))
+            if(data.expiresby!=-1&&currval-data.createdby==data.expiresby){
+                await adminalertmodel.findByIdAndDelete({_id:data._id})
+            }
+        }
+        // console.log(Math.floor(Date.now()/(1000*60)))
+    } catch (error) {
+        console.log('Error in alert cleanup:', error.message);
     }
-    // console.log(Math.floor(Date.now()/(1000*60)))
 }
 setInterval(printing,1000*60)
 module.exports={createadminalert,getalerts,postalertrescont,updateadminalert,deletealert} 

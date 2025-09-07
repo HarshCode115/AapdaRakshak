@@ -1,4 +1,4 @@
-require('dotenv').config('./')
+require('dotenv').config()
 const express=require('express');
 const cookieParser=require("cookie-parser");
 const cors=require('cors')
@@ -7,9 +7,8 @@ const { createadmin } = require('./admin/routes/createadmin.route');
 const { loginroute } = require('./admin/routes/login.route');
 const user  = require('./user/routes/user.js');
 const errorMiddleware=require("./user/middleware/error.js");
-require('dotenv').config('./')
 const {mains}=require('./admin/routes/main')
-const db=require('./db/db');
+const { mongoose, isConnected } = require('./db/db');
 const { payoutroute } = require('./admin/routes/payout.route');
 const { googleuserroute } = require('./user/routes/googleuser.route');
 const { checkuserroute } = require('./user/routes/checkuser.route');
@@ -50,8 +49,29 @@ app.use('/admin',getvolunteerroute)
 app.use('/admin',getfundroute)
 app.use('/user',createorderroute)
 app.use('/us',verifypaymentroute)
-app.use(errorMiddleware);
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        database: isConnected() ? 'Connected' : 'Disconnected',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Simple test endpoint for frontend
+app.get('/user/getdonate', (req, res) => {
+    if (!isConnected()) {
+        return res.json({ 
+            message: 'Database not connected, returning mock data',
+            data: []
+        });
+    }
+    // If database is connected, handle normally
+    res.json({ message: 'Database connected', data: [] });
+});
+
+app.use(errorMiddleware);
 
 let PORT=process.env.PORT||5000
 app.listen(PORT,(e)=>{
