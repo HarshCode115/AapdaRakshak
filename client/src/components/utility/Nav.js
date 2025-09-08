@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useCookies } from 'react-cookie';
+import NotificationCenter from './NotificationCenter';
 
 function Nav() {
 
@@ -137,15 +138,7 @@ function Nav() {
                     </ul>
                 </div>
                 <div className="nav-right">
-                    <IconButton
-                        size="large"
-                        aria-label="show 17 new notifications"
-                        color="inherit"
-                    >
-                        <Badge badgeContent={17} color="error">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
+                    <NotificationCenter userId={user?.email || hasUserToken || 'guest'} />
 
                     {/* Show Login/Signup only when not logged in */}
                     {!isLoggedIn && (
