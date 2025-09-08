@@ -3,6 +3,7 @@ const {emailmodel}=require('../../models/email.model')
 const {phonenomodel}=require('../../models/phoneno.model')
 const {sendemail}=require('../../user/helper/mailsender')
 const {sendsms}=require('../helper/sendsms')
+const {broadcastNotification}=require('../../routes/notification.route')
 const axios=require('axios')
 async function createadminalert(req,res){
     try {
@@ -42,7 +43,7 @@ async function createadminalert(req,res){
         const currmin=Math.floor(Date.now()/(1000*60))
         if(expiresby=='NA') expiresby=-1
         else expiresby=expiresby*60
-        await adminalertmodel.create({type,description,location,latitude,longitude,createdby:currmin,expiresby:expiresby});
+        await adminalertmodel.create({type,description,location,latitude,longitude,createdby:currmin,expiresby:expiresby,status:'pending'});
 
         return res.status(200).json({
             message:'Successfully created',
@@ -76,22 +77,61 @@ async function postalertrescont(req,res){
     try {
         const {id,response}=req.body;
         console.log(req.body)
-        const result=await adminalertmodel.findOneAndUpdate({_id:id},{status:response})
-        if(response==='success'){
-            const res=await emailmodel.find()
-            const result2=await phonenomodel.find()
-            for(let i=0;i<res.length;i++){
-                sendemail({otp:false,email:res[i].email,subject:'Alert from AapdaRakshak',alertcontent:result.description})
-            }
-            var array=[]
-            for(let i=0;i<result2.length;i++){
-                array.push(result2[i].mobileno)
-            }
-            sendsms(array,result)
+        
+        const alertData = await adminalertmodel.findById(id);
+        if(!alertData){
+            return res.status(404).json({
+                message:'Alert not found',
+                flag:false
+            })
         }
+
+        const status = response === 'success' ? 'approved' : 'rejected';
+        const result = await adminalertmodel.findOneAndUpdate(
+            {_id:id},
+            {status:status, updatedAt: new Date()},
+            {new: true}
+        )
+        
+        if(response === 'success'){
+            // Get users within radius
+            const usersInRadius = await getUsersInRadius(alertData.latitude, alertData.longitude, alertData.radius);
+            
+            // Send emails
+            const emailUsers = await emailmodel.find();
+            for(let i=0;i<emailUsers.length;i++){
+                sendemail({
+                    otp:false,
+                    email:emailUsers[i].email,
+                    subject:'🚨 Disaster Alert from AapdaRakshak',
+                    alertcontent:`ALERT: ${alertData.type} in ${alertData.location}\n\nDescription: ${alertData.description}\n\nPlease take necessary precautions and stay safe!`
+                })
+            }
+            
+            // Send SMS to users in radius
+            const phoneUsers = await phonenomodel.find();
+            var phoneArray = [];
+            for(let i=0;i<phoneUsers.length;i++){
+                phoneArray.push(phoneUsers[i].mobileno)
+            }
+            
+            if(phoneArray.length > 0){
+                await sendsms(phoneArray, alertData);
+            }
+
+            // Send in-app notifications
+            await broadcastNotification(
+                `🚨 ${alertData.type.toUpperCase()} ALERT`,
+                `${alertData.description} in ${alertData.location}. Please take necessary precautions.`,
+                'alert',
+                'high',
+                alertData._id
+            );
+        }
+        
         console.log(result);
         return res.status(200).json({
-            message:'Updated Successfully',
+            message: response === 'success' ? 'Alert approved and notifications sent!' : 'Alert rejected',
             flag:true
         })
     } catch (error) {
@@ -100,6 +140,13 @@ async function postalertrescont(req,res){
             flag:false
         })
     }
+}
+
+// Helper function to get users within radius (placeholder for now)
+async function getUsersInRadius(lat, lng, radius) {
+    // This would typically query a user location database
+    // For now, return empty array
+    return [];
 }
 
 async  function updateadminalert(req,res){

@@ -22,6 +22,8 @@ const { getfundroute } = require('./admin/routes/getfund.route');
 const { maproute } = require('./user/routes/map.route');
 const { createorderroute } = require('./user/routes/createorder.route');
 const { verifypaymentroute } = require('./user/routes/verifypayment.route');
+const { disasterroute } = require('./routes/disaster.route');
+const { notificationroute } = require('./routes/notification.route');
 const app=express();
 const bodyparser=require('body-parser')
 app.use(cors({
@@ -48,7 +50,9 @@ app.use('/user',maproute)
 app.use('/admin',getvolunteerroute)
 app.use('/admin',getfundroute)
 app.use('/user',createorderroute)
-app.use('/us',verifypaymentroute)
+app.use('/user',verifypaymentroute)
+app.use('/api',disasterroute)
+app.use('/api',notificationroute)
 
 // Health check endpoint
 app.get('/health', (req, res) => {

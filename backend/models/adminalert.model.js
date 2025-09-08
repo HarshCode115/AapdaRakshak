@@ -27,6 +27,28 @@ const adminalertschema=new Schema({
    },
    expiresby:{
     type:Number
+   },
+   status:{
+    type:String,
+    enum:['pending', 'approved', 'rejected'],
+    default:'pending'
+   },
+   severity:{
+    type:String,
+    enum:['low', 'medium', 'high', 'critical'],
+    default:'medium'
+   },
+   radius:{
+    type:Number,
+    default:10 // radius in kilometers
+   },
+   createdAt:{
+    type:Date,
+    default:Date.now
+   },
+   updatedAt:{
+    type:Date,
+    default:Date.now
    }
 })
 
