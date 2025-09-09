@@ -1,13 +1,16 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, CircularProgress, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Box, Chip, CircularProgress, Button, Collapse, Divider } from '@mui/material';
 import { 
   LocationOn, 
   Schedule, 
   Warning, 
-  Info 
+  Info,
+  ExpandMore,
+  ExpandLess
 } from '@mui/icons-material';
 
 const ActiveAlerts = ({ alerts, loading }) => {
+  const [expandedAlert, setExpandedAlert] = useState(null);
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" p={3}>
@@ -67,25 +70,73 @@ const ActiveAlerts = ({ alerts, loading }) => {
             <Box display="flex" alignItems="center" mb={1}>
               <LocationOn style={{ marginRight: 8, fontSize: 18 }} />
               <Typography variant="body2" color="textSecondary">
-                {alert.location}
+                {typeof alert.location === 'object' 
+                  ? `${alert.location.lat?.toFixed(2)}, ${alert.location.lng?.toFixed(2)}` 
+                  : alert.location || 'Location not specified'}
               </Typography>
             </Box>
             
             <Box display="flex" alignItems="center" mb={2}>
               <Schedule style={{ marginRight: 8, fontSize: 18 }} />
               <Typography variant="body2" color="textSecondary">
-                {formatTime(alert.createdAt)}
+                {formatTime(alert.timestamp || alert.createdAt)}
               </Typography>
             </Box>
 
-            <Box display="flex" gap={1}>
-              <Button variant="contained" color="primary" size="small">
-                View Details
+            {alert.details && (
+              <Box mt={2}>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                size="small"
+                onClick={() => setExpandedAlert(expandedAlert === alert._id ? null : alert._id)}
+                endIcon={expandedAlert === alert._id ? <ExpandLess /> : <ExpandMore />}
+              >
+                {expandedAlert === alert._id ? 'Hide Details' : 'View Details'}
               </Button>
-              <Button variant="outlined" color="secondary" size="small">
-                Share Alert
-              </Button>
-            </Box>
+              
+              <Collapse in={expandedAlert === alert._id} timeout="auto" unmountOnExit>
+                <Box mt={2} p={2} sx={{ 
+                  backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                  borderRadius: 1,
+                  borderLeft: '3px solid',
+                  borderColor: 'primary.main'
+                }}>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    <Info color="primary" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
+                    Detailed Information
+                  </Typography>
+                  <Typography variant="body2" whiteSpace="pre-line">
+                    {alert.details}
+                  </Typography>
+                </Box>
+              </Collapse>
+              <Box mt={1}>
+                {navigator.share && (
+                  <Button 
+                    variant="outlined" 
+                    color="secondary" 
+                    size="small"
+                    onClick={async () => {
+                      try {
+                        await navigator.share({
+                          title: `${alert.type.toUpperCase()} ALERT`,
+                          text: `${alert.description}\n\n${alert.details || ''}\n\nLocation: ${alert.location ? (typeof alert.location === 'object' ? 
+                            `${alert.location.lat?.toFixed(2)}, ${alert.location.lng?.toFixed(2)}` : 
+                            alert.location) : 'Location not specified'}`,
+                          url: window.location.href
+                        });
+                      } catch (error) {
+                        console.log('Error sharing:', error);
+                      }
+                    }}
+                  >
+                    Share Alert
+                  </Button>
+                )}
+              </Box>
+              </Box>
+            )}
           </CardContent>
         </Card>
       ))}

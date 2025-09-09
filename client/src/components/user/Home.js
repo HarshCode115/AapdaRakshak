@@ -4,8 +4,10 @@ import HomeBigCard from './HomeBigCard'
 import RecentDisasters from './RecentDisasters'
 import ActiveAlerts from './ActiveAlerts'
 import QuickActions from './QuickActions'
+import WeatherSection from '../weather/WeatherSection'
 import '../../styles/home.css'
 import '../../styles/enhanced-home.css'
+import '../../styles/improved-home.css'
 import axios from 'axios'
 
 import hbcdata from '../../assets/homebigdata/hbc.json'
@@ -26,19 +28,52 @@ function Home() {
     try {
       setLoading(true);
       
-      // Fetch recent earthquakes
-      const earthquakeResponse = await axios.get('http://localhost:5000/api/earthquakes');
-      if (earthquakeResponse.data.success) {
-        setRecentEarthquakes(earthquakeResponse.data.data.slice(0, 5));
-      }
-
-      // Fetch active alerts
-      const alertsResponse = await axios.get('http://localhost:5000/api/active-alerts');
-      if (alertsResponse.data.success) {
-        setActiveAlerts(alertsResponse.data.data.slice(0, 3));
+      // Fetch all disasters data
+      const disasterResponse = await axios.get('http://localhost:5000/api/disasters');
+      if (disasterResponse.data.success) {
+        const disasters = disasterResponse.data.data || [];
+        
+        // Process earthquake data for recent earthquakes section
+        const earthquakes = disasters
+          .filter(disaster => disaster.type === 'earthquake')
+          .map(eq => ({
+            id: eq.id,
+            magnitude: eq.details?.magnitude?.toFixed(1) || 'N/A',
+            location: eq.details?.place || 'Location not specified',
+            time: eq.timestamp,
+            severity: (eq.severity || 'medium').toLowerCase(),
+            details: eq.details
+          }));
+        
+        // Process all alerts (including non-earthquake events)
+        const alerts = disasters.map(alert => ({
+          id: alert.id,
+          type: alert.type,
+          title: alert.title,
+          description: alert.description,
+          location: alert.location,
+          severity: alert.severity,
+          timestamp: alert.timestamp || new Date().toISOString(),
+          details: alert.details || {}
+        }));
+        
+        // Remove duplicates based on ID and filter for active alerts
+        const uniqueAlerts = Array.from(
+          new Map(
+            alerts
+              .filter(alert => alert.severity === 'HIGH' || alert.severity === 'MEDIUM')
+              .map(alert => [alert.id, alert])
+          ).values()
+        );
+        
+        setRecentEarthquakes(earthquakes);
+        setActiveAlerts(uniqueAlerts);
       }
     } catch (error) {
       console.error('Error fetching disaster data:', error);
+      // Set empty arrays in case of error to clear any previous data
+      setRecentEarthquakes([]);
+      setActiveAlerts([]);
     } finally {
       setLoading(false);
     }
@@ -60,19 +95,24 @@ function Home() {
 
       {/* Active Alerts Section */}
       <section className='alerts-section'>
-        <h2 className='section-title'>🚨 Active Disaster Alerts</h2>
+        <h2 className='section-title'>🚨 Active Alerts</h2>
         <ActiveAlerts alerts={activeAlerts} loading={loading} />
+      </section>
+
+      {/* Weather Section */}
+      <section className='weather-section'>
+        <WeatherSection />
       </section>
 
       {/* Recent Disasters Section */}
       <section className='recent-disasters-section'>
-        <h2 className='section-title'>📊 Recent Global Disasters</h2>
+        <h2 className='section-title'>📊 Recent India Disasters</h2>
         <RecentDisasters earthquakes={recentEarthquakes} loading={loading} />
       </section>
 
       {/* Information Cards */}
       <section className='info-cards-section'>
-        <h2 className='section-title'>📚 Disaster Preparedness Guide</h2>
+        <h2 className='section-title'>Together for Relief</h2>
         <div className='info-cards-container'>
           <HomeBigCard hbcdata={hbcdata[0]} hbcimg={hbcimg1} hbcrow={hbcdata[0].row} />
           <HomeBigCard hbcdata={hbcdata[1]} hbcimg={hbcimg2} hbcrow={hbcdata[1].row} />

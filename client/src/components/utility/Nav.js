@@ -4,6 +4,7 @@ import logo from '../../assets/img1.jpg'
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
+import { Warning, Info, CheckCircle, Error, MarkEmailRead, Map as MapIcon } from '@mui/icons-material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
@@ -132,9 +133,10 @@ function Nav() {
                 <div className={'nav-center'}>
                     <ul>
                         <li><a href="/">Home</a></li>
-                        <li><a href="/maps">Maps</a></li>
+                        <li><a href="/disaster-map">Disaster Map</a></li>
                         <li><a href="/donation">Donation</a></li>
                         <li><a href="/volunteerform">Volunteer</a></li>
+                        <li><a href="/maps">Education</a></li>
                     </ul>
                 </div>
                 <div className="nav-right">
@@ -209,10 +211,13 @@ function Nav() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e)=>handleNav('/')}><p>Home</p></MenuItem>
-                        <MenuItem onClick={(e)=>handleNav('/maps')}><p>Maps</p></MenuItem>
-                        <MenuItem onClick={(e)=>handleNav('/donation')}><p>Donation</p></MenuItem>
-                        <MenuItem onClick={(e)=>handleNav('/volunteerform')}><p>Contact</p></MenuItem>
+                        <Button color="inherit" onClick={() => navigate('/')}>Home</Button>
+                        <Button color="inherit" onClick={() => navigate('/disaster-map')} startIcon={<MapIcon />}>
+                            Disaster Map
+                        </Button>
+                        <Button color="inherit" onClick={() => navigate('/maps')}>Maps</Button>
+                        <Button color="inherit" onClick={() => navigate('/donation')}>Donation</Button>
+                        <Button color="inherit" onClick={() => navigate('/volunteerform')}>Volunteer</Button>
                         <MenuItem>
                             <IconButton
                                 size="large"

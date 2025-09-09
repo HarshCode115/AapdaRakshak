@@ -43,14 +43,63 @@ const NotificationCenter = ({ userId }) => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/notifications/${userId}?limit=10`);
       
-      if (response.data.success) {
-        setNotifications(response.data.data.notifications);
-        setUnreadCount(response.data.data.pagination.unreadCount);
-      }
+      // Fetch disaster news and alerts
+      const [newsResponse, alertsResponse] = await Promise.all([
+        axios.get('http://localhost:5000/api/news').catch(() => ({ data: { data: [] } })),
+        axios.get('http://localhost:5000/api/disasters').catch(() => ({ data: { data: [] } }))
+      ]);
+      
+      const disasterNews = newsResponse.data.data || [];
+      const activeDisasters = alertsResponse.data.data || [];
+      
+      // Convert to notification format
+      const newsNotifications = disasterNews.map(news => ({
+        _id: news.id,
+        title: news.title,
+        message: news.description,
+        type: 'news',
+        priority: news.severity?.toLowerCase() || 'medium',
+        isRead: false,
+        createdAt: news.timestamp || new Date().toISOString(),
+        category: news.category,
+        url: news.url
+      }));
+      
+      const disasterNotifications = activeDisasters.map(disaster => ({
+        _id: disaster.id,
+        title: disaster.title,
+        message: disaster.description,
+        type: 'alert',
+        priority: disaster.severity?.toLowerCase() || 'high',
+        isRead: false,
+        createdAt: disaster.timestamp,
+        location: disaster.location
+      }));
+      
+      // Combine and sort by timestamp
+      const allNotifications = [...newsNotifications, ...disasterNotifications]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 10);
+      
+      setNotifications(allNotifications);
+      setUnreadCount(allNotifications.filter(n => !n.isRead).length);
+      
     } catch (error) {
       console.error('Error fetching notifications:', error);
+      // Fallback mock notifications
+      setNotifications([
+        {
+          _id: 'mock_1',
+          title: 'Flood Alert - Assam',
+          message: 'Heavy rainfall causing floods in multiple districts',
+          type: 'alert',
+          priority: 'high',
+          isRead: false,
+          createdAt: new Date().toISOString()
+        }
+      ]);
+      setUnreadCount(1);
     } finally {
       setLoading(false);
     }

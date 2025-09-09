@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react'
 import '../../styles/homebigcard.css'
 import Button from '@mui/material/Button';
 import { set } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -36,6 +37,22 @@ function HomeBigCard({hbcdata,hbcimg,hbcrow}) {
   },[])
 
 
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    const buttonText = hbcdata.button?.toLowerCase();
+    
+    const routeMap = {
+      'donate now': '/donation',
+      'volunteer now': '/volunteerform',
+      'learn more': '/maps',
+      'view map': '/disaster-map'
+    };
+
+    const route = routeMap[buttonText] || '/';
+    navigate(route);
+  };
+
   return (
 
 
@@ -45,12 +62,27 @@ function HomeBigCard({hbcdata,hbcimg,hbcrow}) {
       <h1>{hbcdata.head}</h1>
       <p>{hbcdata.data}</p>
       {
-        hbcdata.button == "none" ?" " : <Button variant="contained" >{hbcdata.button}</Button>
+        hbcdata.button === "none" ? null : (
+          <Button 
+            variant="contained" 
+            onClick={handleButtonClick}
+            sx={{
+              mt: 2,
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontWeight: 'bold'
+            }}
+          >
+            {hbcdata.button}
+          </Button>
+        )
       }
       </div>
       <div className="vl"></div>
       <div className='hbc-img'>
-        <img src={hbcimg} alt="" />
+        <img src={hbcimg} alt="" style={{ maxWidth: '100%', height: 'auto' }} />
       </div>
     </div>
   )

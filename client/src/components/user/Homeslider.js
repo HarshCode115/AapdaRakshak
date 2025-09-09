@@ -36,9 +36,9 @@ export default function Homeslider() {
     <div className="slider-container">
     <Slider {...settings}>
       {
-        imgArr.map((i)=>(
-          <div id="each-slider">
-           <img src={i} alt="" />
+        imgArr.map((i, index)=>(
+          <div key={index} id="each-slider">
+           <img src={i} alt={`Slider ${index}`} />
           </div>
         ))
       }
