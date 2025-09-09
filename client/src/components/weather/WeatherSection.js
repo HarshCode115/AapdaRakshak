@@ -48,28 +48,41 @@ const WeatherSection = () => {
   const fetchWeatherData = async () => {
     try {
       setLoading(true);
+      
+      // Mock weather data as fallback
+      const mockWeatherData = {
+        Delhi: { temperature: 32, condition: 'Partly Cloudy', humidity: 65, windSpeed: 12, visibility: 8 },
+        Mumbai: { temperature: 29, condition: 'Humid', humidity: 78, windSpeed: 15, visibility: 6 },
+        Bangalore: { temperature: 26, condition: 'Pleasant', humidity: 60, windSpeed: 8, visibility: 10 },
+        Chennai: { temperature: 31, condition: 'Hot & Humid', humidity: 72, windSpeed: 18, visibility: 7 },
+        Kolkata: { temperature: 30, condition: 'Monsoon', humidity: 85, windSpeed: 10, visibility: 5 },
+        Hyderabad: { temperature: 28, condition: 'Clear', humidity: 55, windSpeed: 14, visibility: 12 },
+        Pune: { temperature: 27, condition: 'Mild', humidity: 58, windSpeed: 11, visibility: 9 },
+        Ahmedabad: { temperature: 35, condition: 'Hot', humidity: 45, windSpeed: 16, visibility: 8 }
+      };
+      
       const weatherPromises = popularCities.map(async (city) => {
         try {
-          // Using OpenWeatherMap API - you'll need to add API key to backend
           const response = await axios.get(`http://localhost:5000/api/weather/${city.name}`);
           return {
             city: city.name,
-            temperature: response.data.data?.temperature || Math.floor(Math.random() * 20) + 20,
-            condition: response.data.data?.condition || ['Clear', 'Cloudy', 'Rainy', 'Thunderstorm'][Math.floor(Math.random() * 4)],
-            humidity: response.data.data?.humidity || Math.floor(Math.random() * 40) + 40,
-            windSpeed: response.data.data?.windSpeed || Math.floor(Math.random() * 15) + 5,
-            visibility: response.data.data?.visibility || Math.floor(Math.random() * 5) + 5,
+            temperature: response.data.data?.temperature || mockWeatherData[city.name]?.temperature || 25,
+            condition: response.data.data?.condition || mockWeatherData[city.name]?.condition || 'Clear',
+            humidity: response.data.data?.humidity || mockWeatherData[city.name]?.humidity || 60,
+            windSpeed: response.data.data?.windSpeed || mockWeatherData[city.name]?.windSpeed || 10,
+            visibility: response.data.data?.visibility || mockWeatherData[city.name]?.visibility || 8,
             description: response.data.data?.description || 'Weather data'
           };
         } catch (error) {
-          // Fallback mock data
+          // Use mock data when API fails
+          const mockData = mockWeatherData[city.name] || { temperature: 25, condition: 'Clear', humidity: 60, windSpeed: 10, visibility: 8 };
           return {
             city: city.name,
-            temperature: Math.floor(Math.random() * 20) + 20,
-            condition: ['Clear', 'Cloudy', 'Rainy', 'Thunderstorm'][Math.floor(Math.random() * 4)],
-            humidity: Math.floor(Math.random() * 40) + 40,
-            windSpeed: Math.floor(Math.random() * 15) + 5,
-            visibility: Math.floor(Math.random() * 5) + 5,
+            temperature: mockData.temperature,
+            condition: mockData.condition,
+            humidity: mockData.humidity,
+            windSpeed: mockData.windSpeed,
+            visibility: mockData.visibility,
             description: 'Mock weather data'
           };
         }

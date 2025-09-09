@@ -21,22 +21,48 @@ function VolunteerForm() {
     const handleClick = async (e)=>{
         e.preventDefault();
         try {
-            let token=cookie.get('userid')
-            if(image.length!==0&&name&&number&&type&&location&&desc){
-                await axios.post(URL,{
-                    image,name,number,type,location,desc,token
-                })
-                return swal({
-                    title:'Volunteer under review by admin',
-                    icon:'Success'
-                })
-            }
-            else{
-                return swal({
-                    title:'All fields are required',
-                    icon:'error'
-                })
-            }
+            // Basic validation
+            if (!name) return swal('Error', 'Please enter your name', 'error');
+            if (!number || number.length < 10) return swal('Error', 'Please enter a valid 10-digit phone number', 'error');
+            if (!type) return swal('Error', 'Please specify the type of volunteering', 'error');
+            if (!location) return swal('Error', 'Please enter your location', 'error');
+            if (!desc || desc.length < 20) return swal('Error', 'Please provide a detailed description (at least 20 characters)', 'error');
+            if (image.length === 0) return swal('Error', 'Please upload supporting documents', 'error');
+
+            const token = cookie.get('userid');
+            if (!token) return swal('Error', 'Please login to submit the form', 'error');
+
+            // Format the image data to ensure it has the required Url field
+            const formattedImages = image.map(img => ({
+                name: img.name || 'document',
+                Url: img.url || img.Url || '' // Handle both lowercase and uppercase Url
+            }));
+
+            // Submit the form
+            await axios.post(URL, {
+                image: formattedImages,
+                name,
+                number,
+                type,
+                location,
+                description: desc, // Changed from desc to description to match backend
+                token
+            });
+            
+            // Reset form
+            setName('');
+            setNumber('');
+            setType('');
+            setLocation('');
+            setDesc('');
+            setImage([]);
+
+            swal({
+                title: 'Application Submitted!',
+                text: 'Your volunteer application is under review by admin',
+                icon: 'success',
+                button: 'OK'
+            });
         } catch (error) {
             return swal({
                 title:error.response.data.message,

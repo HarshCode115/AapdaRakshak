@@ -26,18 +26,21 @@ const indiaBounds = {
 };
 
 const disasterTypes = {
-  EARTHQUAKE: { color: '#f44336', icon: '🌋' },
-  FLOOD: { color: '#2196f3', icon: '🌊' },
-  CYCLONE: { color: '#9c27b0', icon: '🌀' },
-  FIRE: { color: '#ff9800', icon: '🔥' },
-  OTHER: { color: '#9e9e9e', icon: '⚠️' }
+  earthquake: { color: '#f44336', icon: '🌋' },
+  flood: { color: '#2196f3', icon: '🌊' },
+  cyclone: { color: '#9c27b0', icon: '🌀' },
+  fire: { color: '#ff9800', icon: '🔥' },
+  landslide: { color: '#8bc34a', icon: '⛰️' },
+  drought: { color: '#795548', icon: '🏜️' },
+  heatwave: { color: '#ff5722', icon: '🌡️' },
+  other: { color: '#9e9e9e', icon: '⚠️' }
 };
 
 const DisasterMap = ({ selectedDisaster, selectedType = 'all' }) => {
   const [disasters, setDisasters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInfo, setSelectedInfo] = useState(null);
-  const [filter, setFilter] = useState(['EARTHQUAKE', 'FLOOD', 'CYCLONE', 'FIRE', 'OTHER']);
+  const [filter, setFilter] = useState(['earthquake', 'flood', 'cyclone', 'fire', 'landslide', 'drought', 'heatwave', 'other']);
   const [map, setMap] = useState(null);
   const [selectedDisasterForDetails, setSelectedDisasterForDetails] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -150,38 +153,48 @@ const DisasterMap = ({ selectedDisaster, selectedType = 'all' }) => {
             maxZoom: 15,
           }}
         >
-          {filteredDisasters.map(disaster => (
-            <React.Fragment key={disaster.id}>
-              <Marker
-                position={disaster.location}
-                icon={{
-                  path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
-                  fillColor: disasterTypes[disaster.type]?.color || '#9e9e9e',
-                  fillOpacity: 0.8,
-                  strokeWeight: 0,
-                  scale: 10,
-                }}
-                onClick={() => setSelectedInfo(disaster)}
-              />
-              {disaster.radius && (
+          {filteredDisasters.map(disaster => {
+            const position = { 
+              lat: disaster.location?.lat || disaster.location?.latitude || 20.5937, 
+              lng: disaster.location?.lng || disaster.location?.longitude || 78.9629 
+            };
+            const radius = disaster.radius || (disaster.severity === 'HIGH' ? 50000 : disaster.severity === 'MEDIUM' ? 30000 : 20000);
+            
+            return (
+              <React.Fragment key={disaster.id}>
+                <Marker
+                  position={position}
+                  icon={{
+                    path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
+                    fillColor: disasterTypes[disaster.type]?.color || '#9e9e9e',
+                    fillOpacity: 0.8,
+                    strokeWeight: 2,
+                    strokeColor: '#ffffff',
+                    scale: disaster.severity === 'HIGH' ? 12 : disaster.severity === 'MEDIUM' ? 10 : 8,
+                  }}
+                  onClick={() => setSelectedInfo(disaster)}
+                />
                 <Circle
-                  center={disaster.location}
-                  radius={disaster.radius}
+                  center={position}
+                  radius={radius}
                   options={{
                     fillColor: disasterTypes[disaster.type]?.color || '#9e9e9e',
-                    fillOpacity: 0.2,
+                    fillOpacity: 0.15,
                     strokeColor: disasterTypes[disaster.type]?.color || '#9e9e9e',
-                    strokeOpacity: 0.8,
+                    strokeOpacity: 0.6,
                     strokeWeight: 2,
                   }}
                 />
-              )}
-            </React.Fragment>
-          ))}
+              </React.Fragment>
+            );
+          })}
 
           {selectedInfo && (
             <InfoWindow
-              position={selectedInfo.location}
+              position={{ 
+                lat: selectedInfo.location?.lat || selectedInfo.location?.latitude || 20.5937, 
+                lng: selectedInfo.location?.lng || selectedInfo.location?.longitude || 78.9629 
+              }}
               onCloseClick={() => setSelectedInfo(null)}
             >
               <Card sx={{ maxWidth: 300 }}>

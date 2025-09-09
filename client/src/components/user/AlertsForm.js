@@ -8,8 +8,8 @@ import Button from '@mui/material/Button';
 import UploadDocs from '../utility/UploadDocs';
 import axios from 'axios'
 import swal from 'sweetalert'
-import {  Cookies } from 'react-cookie'
-var URL='http://localhost:5000/user/createadminalert'
+import { Cookies } from 'react-cookie'
+var URL='http://localhost:5000/user/createalert'
 function AlertsForm() {
     const cookie=new Cookies();
     const [image,setImage] = useState([]);
@@ -19,23 +19,56 @@ function AlertsForm() {
     const [area,setArea] = useState('');
     const [desc,setDesc] = useState('');
 
-    const handleClick = async ()=>{
+    const handleClick = async () => {
         try {
-            let token=cookie.get('userid')
-            console.log(image,title,type,location,area,desc)
-            if(!image.length||!title||!type||!location||!area||!desc){
+            const token = cookie.get('token') || cookie.get('userid');
+            
+            if (!token) {
                 return swal({
-                    title:'All fields are required',
-                    icon:'info'
-                })
+                    title: 'Authentication Required',
+                    text: 'Please login to submit an alert',
+                    icon: 'error'
+                });
             }
-            await axios.post(URL,{
-                title,disastertype:type,location,area,description:desc,supportingdocs:image,token
-            })
+
+            if (!type || !location || !desc) {
+                return swal({
+                    title: 'Type, location, and description are required',
+                    icon: 'info'
+                });
+            }
+
+            // Using 'NA' for expiresby as a default value
+            const expiresby = 'NA';
+            
+const response = await axios.post(URL, {
+                type,
+                location,
+                description: desc,
+                expiresby,
+                token
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                crossDomain: true
+            });
+
+            // Clear form on success
+            setTitle('');
+            setType('');
+            setLocation('');
+            setArea('');
+            setDesc('');
+            setImage([]);
+
             return swal({
-                title:'Successfully submitted',
-                icon:'success'
-            })
+                title: 'Alert Submitted!',
+                text: 'Your alert has been submitted for review',
+                icon: 'success'
+            });
         } catch (error) {
             swal({
                 title:error.response.data.message,
