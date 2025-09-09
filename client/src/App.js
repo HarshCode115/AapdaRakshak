@@ -22,6 +22,7 @@ import Admin from './components/admin/Admin'
 import DonationDetails from './components/home/DonationDetails';
 import ShowAlert from './components/user/ShowAlert';
 import ShowAlertCart from './components/user/ShowAlertCart';
+import DisasterMapPage from './pages/DisasterMapPage';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path='/donationdetails' element={<DonationDetails/>}/>
             <Route path="/showalert" element={<ShowAlert/>}/>
             <Route path="/popup" element={<Popup/>}/>
+            <Route path="/disaster-map" element={<DisasterMapPage/>}/>
             <Route path="*" element={<NotFound/>}/>
           </Routes>
         </AuthProvider>
