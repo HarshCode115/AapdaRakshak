@@ -30,7 +30,7 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 
-export default function Popup({heading,data,att,isUserView = false}) {
+export default function Popup({heading,data,att,isUserView = false, onAccept, onReject, onClose}) {
   const [open, setOpen] = useState(false);
   const cookie=new Cookies()
   let dataArr = Object.values(data);
@@ -60,14 +60,17 @@ export default function Popup({heading,data,att,isUserView = false}) {
 
   const handleClose = () => {
     setOpen(false);
+    if (onClose) onClose();
   };
 
   const handleReject = ()  =>{
     setOpen(false);
+    if (onReject) onReject();
   }
 
   const handleAccept = ()  =>{
     setOpen(false);
+    if (onAccept) onAccept();
   }
   const handleCreate = async ()  =>{
 console.log("handl change ")
@@ -168,21 +171,24 @@ maxWidth='md'>
         </DialogContent>
 
         <DialogActions>
-
         {
           isnew==0?
           <>
-          <Button color='error' onClick={handleReject} variant="contained">Reject</Button>
-          <Button color='success' onClick={handleAccept} variant="contained">Accept</Button>
+          {!isUserView && (
+            <>
+              <Button color='error' onClick={handleReject} variant="contained">Reject</Button>
+              <Button color='success' onClick={handleAccept} variant="contained">Accept</Button>
+            </>
+          )}
+          {isUserView && (
+            <Button color='primary' onClick={handleClose} variant="contained">Close</Button>
+          )}
           </>:
           <>
           <Button color='error' onClick={handleReject} variant="contained">Cancel</Button>
           <Button color='success' onClick={handleCreate} variant="contained">Create</Button>
           </>
         }
-
-          
-          {/* <Button color='success' onClick={handleAccept} variant="contained">Accept</Button> */}
         </DialogActions>
       </Dialog>
     </div>

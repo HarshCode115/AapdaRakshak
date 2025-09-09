@@ -137,6 +137,9 @@ function Nav() {
                         <li><a href="/donation">Donation</a></li>
                         <li><a href="/volunteerform">Volunteer</a></li>
                         <li><a href="/maps">Education</a></li>
+                        {isLoggedIn && (
+                            <li><a href="/alertsform">Create Alert</a></li>
+                        )}
                     </ul>
                 </div>
                 <div className="nav-right">
